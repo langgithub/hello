@@ -34,7 +34,6 @@ public class MiaoPai implements IXposedHookLoadPackage {
                 sekiroClient.registerHandler("tiktokHandler", new TiktokHandler());
 
                 final Class<?> hookclass = XposedHelpers.findClass("com.ss.android.ugc.aweme.app.a.c", lpparam.classLoader);
-                final Object[] point = {null};
 
                 findAndHookMethod(hookclass, "a", String.class, List.class, boolean.class, new XC_MethodHook() {
 

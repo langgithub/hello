@@ -1,22 +1,27 @@
 package com.example.lang.hello;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 
-import com.example.lang.hello.model.TikTok;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import static android.app.AlertDialog.*;
 
 /**
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+
+
+    public Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +31,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     public void testLogin(View view){
-        System.out.println();
+        Uri uri = Uri.parse("whatsapp://send?phone=8617621972154");
+        startActivity(new Intent(Intent.ACTION_VIEW, uri));
+//        onKeyDown(KeyEvent.KEYCODE_BACK,null );
 
     }
 

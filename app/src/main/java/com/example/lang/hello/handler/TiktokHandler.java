@@ -1,8 +1,9 @@
 package com.example.lang.hello.handler;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 
-import com.example.lang.hello.MiaoPai;
 import com.example.lang.hello.model.Store;
 import com.example.lang.hello.model.TikTok;
 import com.virjar.sekiro.api.SekiroRequest;
@@ -11,6 +12,8 @@ import com.virjar.sekiro.api.SekiroResponse;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
+import static android.support.v4.content.ContextCompat.startActivity;
 
 public class TiktokHandler implements SekiroRequestHandler {
 
@@ -37,6 +40,11 @@ public class TiktokHandler implements SekiroRequestHandler {
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
+
+//        Uri uri = Uri.parse("whatsapp://send?phone=8618800008888");
+//        startActivity(new Intent(Intent.ACTION_VIEW,uri));
+
+
 
 
     }
