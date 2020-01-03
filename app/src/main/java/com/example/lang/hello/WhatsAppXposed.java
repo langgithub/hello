@@ -35,8 +35,8 @@ public class WhatsAppXposed implements IXposedHookLoadPackage {
         try {
             if("com.whatsapp".equals(lpparam.packageName)) {
                 //在主进程里面启动服务
-//                final SekiroClient sekiroClient = SekiroClient.start("sekiro.virjar.com", UUID.randomUUID().toString(), "weishi-demo");
-                final SekiroClient sekiroClient = SekiroClient.start("47.103.175.85",7007, UUID.randomUUID().toString(), "weishi-demo");
+                final SekiroClient sekiroClient = SekiroClient.start("sekiro.virjar.com", UUID.randomUUID().toString(), "weishi-demo");
+//                final SekiroClient sekiroClient = SekiroClient.start("47.103.175.85",7007, UUID.randomUUID().toString(), "weishi-demo");
                 sekiroClient.registerHandler("whatsAppHandler", new WhatsAppHandler());
 
                 XposedHelpers.findAndHookMethod(Application.class, "attach", Context.class, new XC_MethodHook() {
@@ -64,7 +64,7 @@ public class WhatsAppXposed implements IXposedHookLoadPackage {
                             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                             XposedBridge.log("hook message>>>>"+param.args[0].toString());
                             WhatsApp whatsApp = WhatsApp.newInstance();
-                            if (whatsApp.getActivity() != null) {
+                            if (!"WhatsApp".equals(param.args[0].toString()) && whatsApp.getActivity() != null) {
                                 SekiroResponse sekiroResponse = Store.requestTaskMap.remove(whatsApp);
                                 if(sekiroResponse!=null){
                                     XposedBridge.log("return  sekiroResponse>>>>"+param.args[0].toString());
@@ -80,7 +80,7 @@ public class WhatsAppXposed implements IXposedHookLoadPackage {
                         XposedHelpers.findAndHookConstructor("X.0cs", cl, dialog, new XC_MethodHook() {
                             @Override
                             protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                                XposedBridge.log("点击dialog 确定按钮");
+//                                XposedBridge.log("点击dialog 确定按钮");
                                 XposedHelpers.callMethod(param.args[0],"A0n");
                             }
                         });
@@ -88,7 +88,7 @@ public class WhatsAppXposed implements IXposedHookLoadPackage {
                         XposedHelpers.findAndHookConstructor("X.03u", cl, x, new XC_MethodHook() {
                             @Override
                             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                                XposedBridge.log("X.03u findAndHookConstructor");
+//                                XposedBridge.log("X.03u findAndHookConstructor");
                                 WhatsApp whatsApp = WhatsApp.newInstance();
                                 if(whatsApp.getX()==null){
                                     whatsApp.setX(param.thisObject);
@@ -101,7 +101,7 @@ public class WhatsAppXposed implements IXposedHookLoadPackage {
                         XposedHelpers.findAndHookConstructor("X.1Wo", cl,Context,AttributeSet,int.class, new XC_MethodHook() {
                             @Override
                             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                                XposedBridge.log("X.1Wo findAndHookConstructor");
+//                                XposedBridge.log("X.1Wo findAndHookConstructor");
                                 WhatsApp whatsApp = WhatsApp.newInstance();
                                 if(whatsApp.getView()==null){
                                     whatsApp.setView(param.thisObject);
@@ -114,7 +114,7 @@ public class WhatsAppXposed implements IXposedHookLoadPackage {
                         XposedHelpers.findAndHookConstructor("X.16T", cl,Activity,new XC_MethodHook() {
                             @Override
                             protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                                XposedBridge.log("X.16T findAndHookConstructor");
+//                                XposedBridge.log("X.16T findAndHookConstructor");
                                 Handler handler = new Handler(Looper.getMainLooper());
                                 handler.post(new MyThread(param.args[0]));
                             }
