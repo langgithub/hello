@@ -2,6 +2,8 @@ package com.example.lang.hello.handler;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 
 import com.example.lang.hello.model.Store;
 import com.example.lang.hello.model.WhatsApp;
@@ -25,6 +27,7 @@ public class WhatsAppHandler implements SekiroRequestHandler {
             whatsApp.setX(null);
             whatsApp.setView(null);
         }
+
         // 绑定与xposed通讯
         Store.requestTaskMap.put(whatsApp, sekiroResponse);
         if (whatsApp.getActivity()!=null){
@@ -33,3 +36,4 @@ public class WhatsAppHandler implements SekiroRequestHandler {
         }
     }
 }
+

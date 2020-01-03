@@ -5,6 +5,8 @@ import android.app.Application;
 import android.content.Context;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.KeyEvent;
 
 import com.example.lang.hello.handler.TiktokHandler;
@@ -33,8 +35,8 @@ public class WhatsAppXposed implements IXposedHookLoadPackage {
         try {
             if("com.whatsapp".equals(lpparam.packageName)) {
                 //在主进程里面启动服务
-                final SekiroClient sekiroClient = SekiroClient.start("sekiro.virjar.com", UUID.randomUUID().toString(), "weishi-demo");
-//                final SekiroClient sekiroClient = SekiroClient.start("47.103.175.85",7007, UUID.randomUUID().toString(), "weishi-demo");
+//                final SekiroClient sekiroClient = SekiroClient.start("sekiro.virjar.com", UUID.randomUUID().toString(), "weishi-demo");
+                final SekiroClient sekiroClient = SekiroClient.start("47.103.175.85",7007, UUID.randomUUID().toString(), "weishi-demo");
                 sekiroClient.registerHandler("whatsAppHandler", new WhatsAppHandler());
 
                 XposedHelpers.findAndHookMethod(Application.class, "attach", Context.class, new XC_MethodHook() {
@@ -106,11 +108,34 @@ public class WhatsAppXposed implements IXposedHookLoadPackage {
                                 }
                             }
                         });
+
+                        //解决频繁调用 Android组件重叠问题,释放资源
+                        Class<?> Activity = XposedHelpers.findClass("android.app.Activity", cl);
+                        XposedHelpers.findAndHookConstructor("X.16T", cl,Activity,new XC_MethodHook() {
+                            @Override
+                            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                                XposedBridge.log("X.16T findAndHookConstructor");
+                                Handler handler = new Handler(Looper.getMainLooper());
+                                handler.post(new MyThread(param.args[0]));
+                            }
+                        });
                     }
                 });
             }
         } catch (Exception e) {
             XposedBridge.log(e.getMessage());
         }
+    }
+}
+
+class MyThread implements Runnable {
+
+    private Object object;
+
+    public MyThread(Object object){
+        this.object=object;
+    }
+    public void run() {
+        XposedHelpers.callMethod(object,"onBackPressed");
     }
 }
