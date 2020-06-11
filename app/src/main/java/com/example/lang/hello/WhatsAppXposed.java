@@ -14,8 +14,8 @@ import com.example.lang.hello.handler.WhatsAppHandler;
 import com.example.lang.hello.model.Store;
 import com.example.lang.hello.model.TikTok;
 import com.example.lang.hello.model.WhatsApp;
-import com.virjar.sekiro.api.SekiroClient;
-import com.virjar.sekiro.api.SekiroResponse;
+import com.lang.sekiro.api.SekiroResponse;
+import com.lang.sekiro.netty.client.SekiroClient;
 
 import java.lang.reflect.Method;
 import java.util.List;

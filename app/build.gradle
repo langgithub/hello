@@ -3,6 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 28
     defaultConfig {
+        multiDexEnabled true
         applicationId "com.example.lang.hello"
         minSdkVersion 19
         targetSdkVersion 28
@@ -31,6 +32,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     compileOnly 'de.robv.android.xposed:api:82'
-    implementation 'com.virjar:sekiro-api:1.0.0'
+    implementation 'com.lang:sekiro-lib:1.0-SNAPSHOT'
+    implementation 'com.android.support:multidex:1.0.3'
 //    implementation files('lib/api-82.jar')
 }

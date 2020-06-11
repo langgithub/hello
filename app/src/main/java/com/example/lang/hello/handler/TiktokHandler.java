@@ -6,9 +6,9 @@ import android.util.Log;
 
 import com.example.lang.hello.model.Store;
 import com.example.lang.hello.model.TikTok;
-import com.virjar.sekiro.api.SekiroRequest;
-import com.virjar.sekiro.api.SekiroRequestHandler;
-import com.virjar.sekiro.api.SekiroResponse;
+import com.lang.sekiro.api.SekiroRequest;
+import com.lang.sekiro.api.SekiroRequestHandler;
+import com.lang.sekiro.api.SekiroResponse;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

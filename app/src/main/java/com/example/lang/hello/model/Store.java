@@ -1,6 +1,6 @@
 package com.example.lang.hello.model;
 
-import com.virjar.sekiro.api.SekiroResponse;
+import com.lang.sekiro.api.SekiroResponse;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

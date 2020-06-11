@@ -31,6 +31,9 @@ allprojects {
             name "aliyunGoogle"
             url "https://maven.aliyun.com/repository/google"
         }
+        maven{
+            url '/Users/yuanlang/.m2/repository/'
+        }
     }
 }
 
