@@ -43,19 +43,19 @@ public class BeiBeiXposed implements IXposedHookLoadPackage {
                         }
 
 
-                        final Class<?> SecurityUtils = XposedHelpers.findClass("com.husor.beibei.utils.SecurityUtils", cl);
-                        findAndHookMethod(SecurityUtils, "a", Byte[].class, new XC_MethodHook() {
-
-                            @Override
-                            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                                BeiBei beiBei = BeiBei.newInstance();
-                                SekiroResponse sekiroResponse = Store.requestTaskMap.remove(beiBei);
-                                if(sekiroResponse!=null){
-                                    XposedBridge.log("sekiroResponse >>>>"+param.getResult());
-                                    sekiroResponse.success(param.getResult());
-                                }
-                            }
-                        });
+//                        final Class<?> SecurityUtils = XposedHelpers.findClass("com.husor.beibei.utils.SecurityUtils", cl);
+//                        findAndHookMethod(SecurityUtils, "a", Byte[].class, new XC_MethodHook() {
+//
+//                            @Override
+//                            protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+//                                BeiBei beiBei = BeiBei.newInstance();
+//                                SekiroResponse sekiroResponse = Store.requestTaskMap.remove(beiBei);
+//                                if(sekiroResponse!=null){
+//                                    XposedBridge.log("sekiroResponse >>>>"+param.getResult());
+//                                    sekiroResponse.success(param.getResult());
+//                                }
+//                            }
+//                        });
                     }
                 });
 

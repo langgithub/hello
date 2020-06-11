@@ -2,6 +2,7 @@ package com.example.lang.hello.handler;
 
 import android.util.Log;
 
+import com.alibaba.fastjson.JSON;
 import com.example.lang.hello.model.BeiBei;
 import com.example.lang.hello.model.Store;
 import com.example.lang.hello.model.TikTok;
@@ -9,36 +10,77 @@ import com.lang.sekiro.api.SekiroRequest;
 import com.lang.sekiro.api.SekiroRequestHandler;
 import com.lang.sekiro.api.SekiroResponse;
 
+import org.json.JSONArray;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.HashMap;
 
+import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 
 public class BeiBeiHandler implements SekiroRequestHandler {
 
+    public static String mo12118a(HashMap map) {
+        StringBuilder sb = new StringBuilder();
+        Object[] array = map.keySet().toArray();
+        Arrays.sort(array);
+        for (Object obj : array) {
+            sb.append(obj);
+            sb.append(map.get(obj));
+        }
+        return sb.toString();
+    }
+
     @Override
     public void handleRequest(SekiroRequest sekiroRequest, SekiroResponse sekiroResponse) {
-        Log.d("Xposed","handleRequest");
+        XposedBridge.log("handleRequest");
         BeiBei beiBei = BeiBei.newInstance();
-        Store.requestTaskMap.put(beiBei, sekiroResponse);
+//        Store.requestTaskMap.put(beiBei, sekiroResponse);
+        String client_info="{\"bd\":\"huaweit\",\"abd\":\"01db21bbb7\",\"package\":\"show\",\"os\":\"6.0.1\",\"screen\":\"1440x2392\",\"dn\":\"Nexus 6P\",\"version\":\"9.41.00\",\"platform\":\"Android\",\"network\":\"WiFi\",\"app_name\":\"beibei\",\"model\":\"Nexus 6P\",\"udid\":\"a0bb111b5414d9a1\"}";
+        String method = "beibei.user.code.send";
+        String phone= sekiroRequest.getString("phone");
+        String timestamp = String.valueOf(System.currentTimeMillis()/1000);
 
-        String str1= "01\\nPOST\\ne4a139db02ab93c96816cb5ef58dd93c\\n/gateway/route?client_info={\"bd\":\"huaweit\",\"abd\":\"01db21bbb7\",\"package\":\"show\",\"os\":\"6.0.1\",\"screen\":\"1440x2392\",\"dn\":\"Nexus 6P\",\"version\":\"9.41.00\",\"platform\":\"Android\",\"network\":\"WiFi\",\"app_name\":\"beibei\",\"model\":\"Nexus 6P\",\"udid\":\"a0bb111b5414d9a1\"}&method=beibei.user.code.send&timestamp=1591781075\\n1591781075";
+        HashMap<String,String> map =new HashMap<>();
+        map.put("client_info",client_info);
+        map.put("method",method);
+        map.put("timestamp",timestamp);
         if(beiBei.getClassLoader() != null){
-            XposedHelpers.callMethod(XposedHelpers.findClass("",beiBei.getClassLoader()),"a", str1.getBytes());
-        }
+            XposedBridge.log("获取加密参数");
+            Class<?> classzz = XposedHelpers.findClass("com.husor.beibei.utils.SecurityUtils",beiBei.getClassLoader());
+            if(classzz!=null){
+                XposedBridge.log(classzz.getName());
+                String body= "tel="+phone+"&key=find_password";
+                Long e = Long.valueOf(timestamp);
+                // 将request中body sign 加密
+                String signBodey = ((String) XposedHelpers.callStaticMethod(classzz,"a", body.getBytes())).toLowerCase();
+                XposedBridge.log("signBodey 参数: "+ signBodey);
+                String str2="01\nPOST\n"+signBodey+"\n/gateway/route?client_info="+client_info+"&method="+method+"&timestamp="+ e +"\n"+e;
 
-//        String url="https://api.tiktokv.com/passport/mobile/sms_login/?os_api=22&device_type=MX4&ssmix=a&manifest_version_code=256&dpi=480&carrier_region=&region=US&app_name=trill&version_name=2.5.6&timezone_offset=28800&is_my_cn=0&fp=a_fake_fp&ac=wifi&update_version_code=2560&channel=googleplay&_rticket=1577173465355&device_platform=android&iid=6773472769088702210&build_number=2.5.6&version_code=256&timezone_name=Asia%2FShanghai&openudid=26332057d592614a&device_id=6773471792155084290&sys_region=CN&app_language=en&resolution=1152*1920&os_version=5.1&device_brand=Meizu&language=zh&aid=1180&mcc_mnc=";
-//        Method a = tikTok.getMethod();
-//        a.setAccessible(true);
-//        Log.d("Xposed","01111111111111111");
-//        // xposed调用函数
-//        try {
-//            String abc=(String) a.invoke(tikTok.getPointer(),url,null,false);
-//            Log.e("url>>>>>>>>>>",abc);
-//        } catch (IllegalAccessException e) {
-//            e.printStackTrace();
-//        } catch (InvocationTargetException e) {
-//            e.printStackTrace();
-//        }
+                //  MAC.HMACSHA1
+                String mac = (String) XposedHelpers.callStaticMethod(classzz,"a", str2, "Sce7vsMfgMORNA1o");
+                XposedBridge.log("mac 参数: "+ mac);
+                // 最总_abr_
+                String _abr_ = ("01" + mac + Long.toHexString(e)).toLowerCase();
+                XposedBridge.log("_abr_ 参数: "+ _abr_);
+                map.put("_abr_",_abr_);
+                // sign
+                String sign = (String) XposedHelpers.callStaticMethod(classzz,"a", BeiBeiHandler.mo12118a(map), true);
+                XposedBridge.log("sign 参数: "+ sign);
+                map.put("sign",sign);
+
+                XposedBridge.log("param 参数: "+ JSON.toJSONString(map));
+                if(sekiroResponse!=null){
+                    sekiroResponse.success(JSON.toJSONString(map));
+                }
+            }else {
+                XposedBridge.log("null");
+                if(sekiroResponse!=null){
+                    sekiroResponse.success("error");
+                }
+            }
+        }
     }
 }
